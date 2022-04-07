@@ -30,6 +30,9 @@ public class Compass extends AppCompatActivity {
     private Sensor mAccelerometer;
     private TextView viewDegrees;
 
+    //Added for testing filtering sensor data
+    private ExponentialMovingAverage ema;
+
     private SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
@@ -54,6 +57,7 @@ public class Compass extends AppCompatActivity {
 
         //My own code addition.
         viewDegrees = (TextView) findViewById(R.id.viewDegrees);
+        ema = new ExponentialMovingAverage(0.125);
     }
 
     private void calculateCompassDirection(SensorEvent event) {
@@ -72,18 +76,21 @@ public class Compass extends AppCompatActivity {
             // I renamed azimuth to deg.
             float deg = (float) Math.toDegrees(-orientationValues[0]);
 
+            //Own addition to make the compass less shaky
+            float avgDeg = (float) ema.average(deg);
+
             RotateAnimation rotateAnimation = new RotateAnimation(
                     mLastDirectionInDegrees,
-                    deg,
+                    avgDeg,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f
             );
 
-            rotateAnimation.setDuration(50);
+            rotateAnimation.setDuration(100); //Increased from 50 to 100
             rotateAnimation.setFillAfter(true);
             mImageViewCompass.startAnimation(rotateAnimation);
 
-            mLastDirectionInDegrees = deg;
+            mLastDirectionInDegrees = (float) avgDeg;
 
             //Own addition to show what the current degree is.
             double showDeg = Math.round(mLastDirectionInDegrees);
@@ -103,4 +110,25 @@ public class Compass extends AppCompatActivity {
         super.onPause();
         mSensorManager.unregisterListener(mSensorListener);
     }
+
+    // The following code is from here: https://stackoverflow.com/questions/9200874/implementing-exponential-moving-average-in-java/9201081#9201081
+    private class ExponentialMovingAverage {
+        private double alpha;
+        private Double oldValue;
+
+        public ExponentialMovingAverage(double alpha) {
+            this.alpha = alpha;
+        }
+
+        public double average(double value) {
+            if (oldValue == null) {
+                oldValue = value;
+                return value;
+            }
+            double newValue = oldValue + alpha * (value - oldValue);
+            oldValue = newValue;
+            return newValue;
+        }
+    }
+
 }
