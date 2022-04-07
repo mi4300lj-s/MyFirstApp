@@ -2,7 +2,8 @@ package com.example.myfirstapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//skip the import for android.app.Activity;
+//The code is mainly taken from this guide: https://www.youtube.com/watch?v=CXS5upB7yvw
+//I skipped the import for android.app.Activity;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -15,20 +16,14 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-public class Compass extends AppCompatActivity { //implements SensorEventListener{
-
-    //Försök 1: Utgår från denna guiden: https://www.javacodegeeks.com/2013/09/android-compass-code-example.html
-    //Den verkar dock inte fungera helt, så kommenterar ut koden istället. Provar en annan guide. https://www.youtube.com/watch?v=CXS5upB7yvw
-    //de 5 första minuterna är de viktigaste att titta på typ
+public class Compass extends AppCompatActivity {
 
     float[] mGravityValues = new float[3];
     private float[] mAccelerometerValues = new float[3];
     private float[] mRotationMatrix = new float[9];
     private float mLastDirectionInDegrees = 0f;
 
-    //eget tillägg, ej i guiden ännu
+    //I added the following attributes, not shown in the guide.
     private ImageView mImageViewCompass;
     private SensorManager mSensorManager;
     private Sensor mMagnetometer;
@@ -43,7 +38,7 @@ public class Compass extends AppCompatActivity { //implements SensorEventListene
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int i) {
-            //Not in use
+            //Not in use.
         }
     };
 
@@ -57,7 +52,7 @@ public class Compass extends AppCompatActivity { //implements SensorEventListene
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        //eget tillägg
+        //My own code addition.
         viewDegrees = (TextView) findViewById(R.id.viewDegrees);
     }
 
@@ -74,7 +69,7 @@ public class Compass extends AppCompatActivity { //implements SensorEventListene
         if(success) {
             float[] orientationValues = new float[3];
             SensorManager.getOrientation(mRotationMatrix, orientationValues);
-            // I'm renaming azimuth to deg, such a weird word...
+            // I renamed azimuth to deg.
             float deg = (float) Math.toDegrees(-orientationValues[0]);
 
             RotateAnimation rotateAnimation = new RotateAnimation(
@@ -90,8 +85,9 @@ public class Compass extends AppCompatActivity { //implements SensorEventListene
 
             mLastDirectionInDegrees = deg;
 
-            //eget tillägg: visa nuvarande antal grader
-            viewDegrees.setText("Last direction: " + mLastDirectionInDegrees + " degrees.");
+            //Own addition to show what the current degree is.
+            double showDeg = Math.round(mLastDirectionInDegrees);
+            viewDegrees.setText("Last direction: " + showDeg + " degrees.");
         }
     }
 
@@ -107,65 +103,4 @@ public class Compass extends AppCompatActivity { //implements SensorEventListene
         super.onPause();
         mSensorManager.unregisterListener(mSensorListener);
     }
-
-    /*
-    private ImageView image;
-    private float currentDegree = 0f;
-    private SensorManager sensorManager;
-    TextView tvHeading;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compass);
-
-        //kod från guiden
-        image = (ImageView) findViewById(R.id.imageViewCompass);
-        tvHeading = (TextView) findViewById(R.id.tvHeading);
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Note that sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) is deprecated nowadays
-        // Källa här: https://source.android.com/devices/sensors/sensor-types#orientation_deprecated
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_GAME );
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-
-        //Problem att sensorn inte verkar uppdatera, hur göra...? hmmm
-        float degree = Math.round(sensorEvent.values[0]);
-
-        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees.");
-
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
-        );
-
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-
-        image.startAnimation(ra);
-        currentDegree = -degree;
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-        //Not used
-    }
-     */
 }

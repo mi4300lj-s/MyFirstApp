@@ -10,8 +10,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class Accelerometers extends AppCompatActivity implements SensorEventListener {
-
-    //Har följt denna guiden: https://www.youtube.com/watch?v=LsWJipo4knk
+    // Code is taken from the following guide unless explicitly stated otherwise: https://www.youtube.com/watch?v=LsWJipo4knk
 
     private TextView textView;
     private SensorManager sensorManager;
@@ -25,24 +24,21 @@ public class Accelerometers extends AppCompatActivity implements SensorEventList
         textView = findViewById(R.id.text_accelerometer);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        // Fick ange annat klassnamn än i guiden då vi inte befinner oss i MainActivity
+        // I replaced MainActivity with Accelerometer as the code is not located in MainActivity.
         sensorManager.registerListener(Accelerometers.this, sensor, sensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        // Min egen omskrivning, återkomma om vi behöver avrunda typ
+        //Logic is the same as in the guide but I rewrote it.
         float x = sensorEvent.values[0];
         float y = sensorEvent.values[1];
         float z = sensorEvent.values[2];
-        //sensorn verkar vara väldigt känslig, liksom de sista decimalerna ändras även om telefonen ligger helt stilla
-
         textView.setText("x-axis: " + x + "\n" + "y-axis: " + y + "\n" + "z-axis: " + z);
-        // Nu dags att testa på en riktig telefon, uppdateras värdena? Svar ja.
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        //TODO
+        //Not in use.
     }
 }
