@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class Accelerometers extends AppCompatActivity implements SensorEventListener {
 
-    //Ett nästa steg 'imorgon' är att följa denna guiden: https://www.youtube.com/watch?v=LsWJipo4knk
+    //Har följt denna guiden: https://www.youtube.com/watch?v=LsWJipo4knk
 
     private TextView textView;
     private SensorManager sensorManager;
@@ -38,7 +38,7 @@ public class Accelerometers extends AppCompatActivity implements SensorEventList
         //sensorn verkar vara väldigt känslig, liksom de sista decimalerna ändras även om telefonen ligger helt stilla
 
         textView.setText("x-axis: " + x + "\n" + "y-axis: " + y + "\n" + "z-axis: " + z);
-        // Nu dags att testa på en riktig telefon, uppdateras värdena?
+        // Nu dags att testa på en riktig telefon, uppdateras värdena? Svar ja.
     }
 
     @Override
