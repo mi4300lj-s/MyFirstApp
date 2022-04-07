@@ -7,9 +7,9 @@
     tools:context=".Accelerometers">
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="164dp"
-        android:layout_height="59dp"
+        android:id="@+id/text_accelerometer"
+        android:layout_width="250dp"
+        android:layout_height="149dp"
         android:text="Yay! You did it."
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
